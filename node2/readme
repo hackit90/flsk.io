@@ -1,0 +1,74 @@
+# creating some payloads and sending them
+lpp.add_digital_input(True)
+lpp.add_digital_input(False, channel = 112)
+lpp.send(reset_payload = True)
+
+lpp.add_digital_output(True)
+lpp.add_digital_output(False, channel = 113)
+lpp.send(reset_payload = True)
+
+lpp.add_analog_input(102.34)
+lpp.add_analog_input(-89.34, channel = 114)
+lpp.send(reset_payload = True)
+
+lpp.add_analog_output(102.34)
+lpp.add_analog_output(-89.34, channel = 115)
+lpp.send(reset_payload = True)
+
+lpp.add_luminosity(1024)
+lpp.add_luminosity(6000.87, channel = 116)
+lpp.send(reset_payload = True)
+
+lpp.add_presence(True)
+lpp.add_presence(False, channel = 117)
+lpp.send(reset_payload = True)
+
+lpp.add_temperature(14.0)
+lpp.add_temperature(54.3, channel = 118)
+lpp.send(reset_payload = True)
+
+lpp.add_relative_humidity(100.0)
+lpp.add_relative_humidity(0.0, channel = 130)
+lpp.add_relative_humidity(45.5, channel = 131)
+lpp.send(reset_payload = True)
+
+lpp.add_humidity(100.0)
+lpp.add_humidity(0.0, channel = 130)
+lpp.add_humidity(45.5, channel = 131)
+lpp.send(reset_payload = True)
+
+lpp.add_accelerometer(12.441,20.112,7.023)
+lpp.send(reset_payload = True)
+lpp.add_accelerometer(12.441,-30.112,8.023, channel = 121)
+lpp.send(reset_payload = True)
+
+lpp.add_barometric_pressure(123.3)
+lpp.add_barometric_pressure(0.4, channel = 122)
+lpp.send(reset_payload = True)
+
+lpp.add_gyrometer(12.02,23.44,-23.01)
+lpp.send(reset_payload = True)
+lpp.add_gyrometer(-12.02,-23.44,23.01, channel = 123)
+lpp.send(reset_payload = True)
+
+lpp.add_gps(47.353444, 7.904001, 0.0)
+lpp.send(reset_payload = True)
+
+#pycom.heartbeat(True)
+pycom.rgbled(0xFFFF00)
+
+#while True:
+#   temp=str(mp.temperature())
+#    s.send(temp)
+#    print('sended:', temp)
+#    time.sleep(10)
+
+#for i in range (20):
+#    pkt = b'PKT #' + bytes([i])
+#    print('Sending:', pkt)
+#    s.send(pkt)
+#    time.sleep(4)
+#    rx, port = s.recvfrom(256)
+#    if rx:
+#        print('Received: {}, on port: {}'.format(rx, port))
+#time.sleep(6)
