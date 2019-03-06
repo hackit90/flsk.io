@@ -72,6 +72,15 @@ lpp = cayenneLPP.CayenneLPP(size = 100, sock = s)
 ####
 #### Ab diesem Abschnitt werden in einer endlosen Schlaufe Daten übermittelt, solange die LORAWAN Verbindung steht
 ####
+
+# Channel Aufbau:
+# 1xx = Gyro (Li)
+# 2xx = Licht (lt)
+# 3xx = Accelerometerdaten (acc)
+# 4xx = Temperatur/Feuchtigkeit (si)
+# 5xx = Druck (mpp)
+# 6xx = Höhenmeter (mp)
+
 pycom.heartbeat(True)
 while True:
 
@@ -81,7 +90,7 @@ while True:
     x = xyz[0]
     y = xyz[1]
     z = xyz[2]
-    lpp.add_accelerometer(x,y,z, channel = 121)
+    lpp.add_accelerometer(x,y,z, channel = 101)
     print("xyz:",xyz)
     lpp.send(reset_payload = True)
 
@@ -90,8 +99,8 @@ while True:
     light = lt.light()
     light0 = light[0]
     light1 = light[1]
-    lpp.add_luminosity(light0, channel = 116)
-    lpp.add_luminosity(light1, channel = 136)
+    lpp.add_luminosity(light0, channel = 201)
+    lpp.add_luminosity(light1, channel = 202)
     print("light",light)
     lpp.send(reset_payload = True)
 
@@ -99,7 +108,7 @@ while True:
     xg = acc.pitch()
     yg = acc.roll()
     zg = 0
-    lpp.add_gyrometer(xg,yg,zg, channel = 123)
+    lpp.add_gyrometer(xg,yg,zg, channel = 301)
     print("gyro",xg,yg,zg)
     lpp.send(reset_payload = True)
 
@@ -107,25 +116,25 @@ while True:
     druck = mpp.pressure()
     druck = druck/100 #Für Hectopascal
     print("druck",druck)
-    lpp.add_barometric_pressure(druck, channel = 122)
+    lpp.add_barometric_pressure(druck, channel = 501)
     print("druck",druck)
     lpp.send(reset_payload = True)
 
     # Temperatur des Sensors auslesen in Celsius
     temperatur = si.temperature()
-    lpp.add_temperature(temperatur, channel = 118)
+    lpp.add_temperature(temperatur, channel = 401)
     print("temperatur",temperatur)
     lpp.send(reset_payload = True)
 
     # Höhenmeter des Sensors anhand des Druckes von Pascal umgerechnet
     mum = mp.altitude()
-    lpp.add_analog_output(mum, channel = 115)
+    lpp.add_analog_output(mum, channel = 601)
     print("meteruebermeer",mum)
     lpp.send(reset_payload = True)
 
     # Feuchtigkeit messen
     humid = si.humidity()
-    lpp.add_relative_humidity(humid, channel = 131)
+    lpp.add_relative_humidity(humid, channel = 402)
     print("humid",humid)
     lpp.send(reset_payload = True)
 
