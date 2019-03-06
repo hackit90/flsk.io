@@ -128,7 +128,7 @@ while True:
 
     # Höhenmeter des Sensors anhand des Druckes von Pascal umgerechnet
     mum = mp.altitude()
-    lpp.add_analog_output(mum, channel = 601)
+    lpp.add_barometric_pressure(mum, channel = 601)
     print("meteruebermeer",mum)
     lpp.send(reset_payload = True)
 
