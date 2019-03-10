@@ -55,7 +55,7 @@ lora.add_channel(0, frequency=config.LORA_FREQUENCY, dr_min=0, dr_max=5)
 lora.add_channel(1, frequency=config.LORA_FREQUENCY, dr_min=0, dr_max=5)
 lora.add_channel(2, frequency=config.LORA_FREQUENCY, dr_min=0, dr_max=5)
 
-#LED leuchtet ganz weiss, bis sich etwas connected
+# LED leuchtet ganz weiss, bis sich LORA verbindet
 pycom.rgbled(0xffffff)
 
 # Verbindung an das nächste LORA WAN Netz mit ABP (Activation By Personalization)
@@ -63,11 +63,16 @@ lora.join(activation=LoRa.ABP, auth=(dev_addr, nwk_swkey, app_swkey))
 
 # LORA Socket
 s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
-s.setsockopt(socket.SOL_LORA, socket.SO_DR, 0)
-s.setblocking(True)
+
+# set the LoRaWAN data rate
+s.setsockopt(socket.SOL_LORA, socket.SO_DR, config.LORA_NODE_DR)
+s.setblocking(False)
 
 # cayenneLPP (Low Power Packet) definieren mit einer bytegrösse von max. 100bytes
 lpp = cayenneLPP.CayenneLPP(size = 100, sock = s)
+
+# LED geht auf Herzschlagmodus (braucht weniger Strom)
+pycom.heartbeat(True)
 
 ####
 #### Ab diesem Abschnitt werden in einer endlosen Schlaufe Daten übermittelt, solange die LORAWAN Verbindung steht
@@ -81,8 +86,8 @@ lpp = cayenneLPP.CayenneLPP(size = 100, sock = s)
 # 5xx = Druck (mpp)
 # 6xx = Höhenmeter (mp)
 
-pycom.heartbeat(True)
-while True:
+while lora.has_joined():
+    print("joined")
 
     # xyz von accelerometer sensor ablesen und senden, wobei die z-Achse mit meinem PySense noch nicht existiert,
     # muss aber zwingend mitgeschickt werden

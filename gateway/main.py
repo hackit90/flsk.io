@@ -20,7 +20,7 @@ import time
 from nanogateway import NanoGateway
 
 pycom.heartbeat(False)
-pycom.rgbled(0xFF0000)
+pycom.rgbled(0x110000)
 
 if __name__ == '__main__':
     nanogw = NanoGateway(
