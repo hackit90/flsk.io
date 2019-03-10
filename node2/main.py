@@ -16,6 +16,7 @@ import time
 import config
 import pycom
 import ustruct
+import ubinascii
 
 #Sensorelemente importieren von /lib
 from pysense import Pysense
@@ -43,8 +44,8 @@ pycom.rgbled(0x7f7f00)
 # ABP Aktivierung aufs TTN (thethingsnetwork)
 # Mit Verwendung meiner API KEYS von TTN
 dev_addr = struct.unpack(">l", binascii.unhexlify('26011DD8'))[0]
-nwk_swkey = binascii.unhexlify('69D2F65B57521C5773A9520335B86760')
-app_swkey = binascii.unhexlify('F5F9A4E627B50DE7BD789D654589C4C5')
+nwk_swkey = ubinascii.unhexlify('CA6279F8496A57F1C89F1886CD6A2909')
+app_swkey = ubinascii.unhexlify('5F056FFC42932349E12963F48BF5EA1B')
 
 # Channel Cleaning von nicht verwendeten Channels auf Lora Modul
 for i in range(3, 16):
@@ -56,7 +57,7 @@ lora.add_channel(1, frequency=config.LORA_FREQUENCY, dr_min=0, dr_max=5)
 lora.add_channel(2, frequency=config.LORA_FREQUENCY, dr_min=0, dr_max=5)
 
 # LED leuchtet ganz weiss, bis sich LORA verbindet
-pycom.rgbled(0xffffff)
+pycom.rgbled(0x111111)
 
 # Verbindung an das nächste LORA WAN Netz mit ABP (Activation By Personalization)
 lora.join(activation=LoRa.ABP, auth=(dev_addr, nwk_swkey, app_swkey))
@@ -68,11 +69,11 @@ s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 s.setsockopt(socket.SOL_LORA, socket.SO_DR, config.LORA_NODE_DR)
 s.setblocking(False)
 
-# cayenneLPP (Low Power Packet) definieren mit einer bytegrösse von max. 100bytes
-lpp = cayenneLPP.CayenneLPP(size = 100, sock = s)
-
 # LED geht auf Herzschlagmodus (braucht weniger Strom)
 pycom.heartbeat(True)
+
+# cayenneLPP (Low Power Packet) definieren mit einer bytegrösse von max. 100bytes
+lpp = cayenneLPP.CayenneLPP(size = 100, sock = s)
 
 ####
 #### Ab diesem Abschnitt werden in einer endlosen Schlaufe Daten übermittelt, solange die LORAWAN Verbindung steht
@@ -98,6 +99,8 @@ while lora.has_joined():
     lpp.add_accelerometer(x,y,z, channel = 101)
     print("xyz:",xyz)
     lpp.send(reset_payload = True)
+    time.sleep(30)
+
 
     # lichtsensor inkl. lichtberechnung (multiplikation) zweier Farblichtsensoren.
     # muss dazu zuerst die einzelnen Zahlen im Array - zu INT-format darstellen
