@@ -1,8 +1,24 @@
+#ProjectName:               Abschlussarbeit, Objektorientiertes Programmieren
+#Autor:                     Kanapathipillai Subakeesan (Subi)
+#Projekt Dokumentation:     https://flsk.io
+#TTN:                       Europe | 3400 Burgdorf LW-GATEWAY_ID
+#ProjectDate:               2019-03-20
+#Ordner:                   /lib
+#File:                     config.py
+
+#Bibliotheken importieren von /lib
+
+#####
+#Dieser Konfig-Teil dient vielleicht mal der Zukunft, falls man in einem Umfeld ist, wo man immer das WLAN-Modul
+#statt LORA verwenden möchte
+####
+
 import machine
 import ubinascii
 
 WIFI_MAC = ubinascii.hexlify(machine.unique_id()).upper()
-# Set  the Gateway ID to be the first 3 bytes of MAC address + 'FFFE' + last 3 bytes of MAC address
+
+# GW-ID wird anhand der ersten 3 bytes der MAC Adresse + 'FFFE' + die letzten 3 bytes der MAC definiert
 GATEWAY_ID = WIFI_MAC[:6] + "FFFE" + WIFI_MAC[6:12]
 
 SERVER = 'router.eu.thethings.network'

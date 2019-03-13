@@ -36,48 +36,56 @@ lt = LTR329ALS01(py)
 li = LIS2HH12(py)
 
 #LORA WAN Mode Europa = LoRa.EU868
-#LED leutchtet grün, sofern nicht verbunden mit dem LORA WAN
+#LED-STATUS1:INITIALISIERE LORA leuchtet gelb auf voller Stufe, sofern nicht verbunden mit dem LORA WAN
 lora = LoRa(mode=LoRa.LORAWAN, region=LoRa.EU868)
 pycom.heartbeat(False)
-pycom.rgbled(0x7f7f00)
+pycom.rgbled(0x7f7f00) # yellow
 
-# ABP Aktivierung aufs TTN (thethingsnetwork)
-# Mit Verwendung meiner API KEYS von TTN
-dev_addr = struct.unpack(">l", binascii.unhexlify('26011DD8'))[0]
-nwk_swkey = ubinascii.unhexlify('CA6279F8496A57F1C89F1886CD6A2909')
-app_swkey = ubinascii.unhexlify('5F056FFC42932349E12963F48BF5EA1B')
-
-# Channel Cleaning von nicht verwendeten Channels auf Lora Modul
-for i in range(3, 16):
-    lora.remove_channel(i)
+# Verwendung meiner API KEYS von TTN für den Aufbau von OTA
+dev_eui = binascii.unhexlify('30AEA4FFFE786398')
+app_eui = binascii.unhexlify('70B3D57ED0012CF5')
+app_key = binascii.unhexlify('5F01C38CA544DA99E7893CFFB6F9E071')
 
 # Alle Channels auf die gleiche Frequenz stellen
 lora.add_channel(0, frequency=config.LORA_FREQUENCY, dr_min=0, dr_max=5)
 lora.add_channel(1, frequency=config.LORA_FREQUENCY, dr_min=0, dr_max=5)
 lora.add_channel(2, frequency=config.LORA_FREQUENCY, dr_min=0, dr_max=5)
 
-# LED leuchtet ganz weiss, bis sich LORA verbindet
-pycom.rgbled(0x111111)
+# LED-STATUS2:FREQUENZBÄNDER BEREIT, leuchtet weiss, auf Stufe2
+pycom.rgbled(0x222222)
 
-# Verbindung an das nächste LORA WAN Netz mit ABP (Activation By Personalization)
-lora.join(activation=LoRa.ABP, auth=(dev_addr, nwk_swkey, app_swkey))
+# Verbindung an das nächste LORA WAN Netz mit OTA
+# OTA Aktivierung aufs TTN (thethingsnetwork), OTA = OVER THE AIR AUTHENTICATION
+lora.join(activation=LoRa.OTAA, auth=(dev_eui, app_eui, app_key), timeout=0, dr=config.LORA_NODE_DR)
 
-# LORA Socket
+# Solange sich die Node noch nicht über OTA aktiviert hat:
+# STATUS-LED:Lora!=verbunden
+while not lora.has_joined(0x7f7f11):
+    pycom.rgbled()
+    time.sleep(2.5)
+    print('OTA Aktivierung in Prozess...')
+
+# Channel Cleaning von nicht verwendeten Channels auf dem Lora Modul
+for i in range(3, 16):
+    lora.remove_channel(i)
+
+# LORA Socket aufsetzen
 s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 
-# set the LoRaWAN data rate
+# LORA Datenrate auf dem lib Teil config entnehmen
 s.setsockopt(socket.SOL_LORA, socket.SO_DR, config.LORA_NODE_DR)
 s.setblocking(False)
 
-# LED geht auf Herzschlagmodus (braucht weniger Strom)
+# LED-STATUS:LORA-Verbindung steht geht auf Herzschlagmodus (braucht weniger Strom)
+time.sleep(5.0)
 pycom.heartbeat(True)
-
-# cayenneLPP (Low Power Packet) definieren mit einer bytegrösse von max. 100bytes
-lpp = cayenneLPP.CayenneLPP(size = 100, sock = s)
 
 ####
 #### Ab diesem Abschnitt werden in einer endlosen Schlaufe Daten übermittelt, solange die LORAWAN Verbindung steht
 ####
+
+# cayenneLPP (Low Power Packet) definieren mit einer bytegrösse von max. 100bytes
+lpp = cayenneLPP.CayenneLPP(size = 100, sock = s)
 
 # Channel Aufbau:
 # 1xx = Gyro (Li)
@@ -87,6 +95,8 @@ lpp = cayenneLPP.CayenneLPP(size = 100, sock = s)
 # 5xx = Druck (mpp)
 # 6xx = Höhenmeter (mp)
 
+# Während die Verbindung mit Lora besteht, führe folgende WHILE - Schlaufe auslesen
+# Nach einer Wartezeit von 30 Sekunden, werden neue Sensordaten verschickt
 while lora.has_joined():
     print("joined")
 
@@ -146,4 +156,4 @@ while lora.has_joined():
     print("humid",humid)
     lpp.send(reset_payload = True)
 
-    time.sleep(120)
+    time.sleep(30)
