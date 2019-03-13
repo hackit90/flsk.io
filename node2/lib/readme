@@ -1,4 +1,5 @@
-# creating some payloads and sending them
+# Sammlung von lpp Payloads und Testdaten
+
 lpp.add_digital_input(True)
 lpp.add_digital_input(False, channel = 112)
 lpp.send(reset_payload = True)
