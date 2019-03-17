@@ -1,27 +1,25 @@
-#4TABULARASA HACKIT.IO - FIPY1 LORAGW: b'30aea4FFFE2d6948'
-#/dev/tty.usbmodemPy343431
-#import os
-#os.mkfs('/flash')
-
 """
-HACKIT.IO THINGSNETWORK FIPY1
-CONFIG: WIFI_SSID and WIFI_PASS
-LORA_FREQUENCY FOR SWITZERLANDE
+#ProjectName:               Abschlussarbeit, Objektorientiertes Programmieren
+#Autor:                     Kanapathipillai Subakeesan (Subi)
+#Projekt Dokumentation:     https://flsk.io
+#TTN:                       Europe | 3400 Burgdorf LW-GATEWAY_ID
+#ProjectDate:               2019-03-20
+#Ordner:                   /lib
+#File:                     main.py
+
+#Bibliotheken importieren von /lib
 """
 
-#from network import WLAN
-#import ubinascii
-#wl = WLAN()
-#ubinascii.hexlify(wl.mac())[:6] + 'FFFE' + ubinascii.hexlify(wl.mac())[6:]
-
-import config
+#Notwendige Libraries des Boards und Timeservers laden
 import pycom
 import time
 from nanogateway import NanoGateway
 
+# LED-STATUS: Auf rot stellen, bis die Verbindung aufgebaut ist
 pycom.heartbeat(False)
 pycom.rgbled(0x110000)
 
+# LoRa NanoGateway Informationen in die Variable nanogw laden
 if __name__ == '__main__':
     nanogw = NanoGateway(
         id=config.GATEWAY_ID,
@@ -35,12 +33,13 @@ if __name__ == '__main__':
         ntp_period=config.NTP_PERIOD_S
         )
 
+# LoRa NanoGateway mit den eingelesenen Informationen starten
     nanogw.start()
-    # LED-STATUS: LoRaWAN ist ready
+    # LED-STATUS: LoRaWAN ist ready, auf weiss Stufe 3 stellen
     pycom.rgbled(0x333333)
     time.sleep(5)
 
-    # LED-STATUS: Auf Heartbeat Mode, damit Strom gespart wird
+    # LED-STATUS: Auf Heartbeat Mode umstellen, damit Strom gespart wird
     pycom.heartbeat(True)
     nanogw._log('ENTER to enter the REPL')
 input()

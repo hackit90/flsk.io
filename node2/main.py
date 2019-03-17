@@ -1,3 +1,4 @@
+"""
 #ProjectName:               Abschlussarbeit, Objektorientiertes Programmieren
 #Autor:                     Kanapathipillai Subakeesan (Subi)
 #Projekt Dokumentation:     https://flsk.io
@@ -7,6 +8,8 @@
 #File:                     main.py
 
 #Bibliotheken importieren von /lib
+"""
+
 import time
 from network import LoRa
 import socket
@@ -107,53 +110,64 @@ while lora.has_joined():
     x = xyz[0]
     y = xyz[1]
     z = xyz[2]
-    lpp.add_accelerometer(x,y,z, channel = 101)
+    lpp.add_accelerometer(x,y,z)
     print("xyz:",xyz)
     lpp.send(reset_payload = True)
-    time.sleep(30)
+    time.sleep(2)
 
     # lichtsensor inkl. lichtberechnung (multiplikation) zweier Farblichtsensoren.
     # muss dazu zuerst die einzelnen Zahlen im Array - zu INT-format darstellen
     light = lt.light()
     light0 = light[0]
     light1 = light[1]
-    lpp.add_luminosity(light0, channel = 201)
+    lpp.add_luminosity(light0)
     lpp.add_luminosity(light1, channel = 202)
     print("light",light)
     lpp.send(reset_payload = True)
+    time.sleep(2)
 
     # Gyroscopdaten auslesen (Grad)
     xg = acc.pitch()
     yg = acc.roll()
     zg = 0
-    lpp.add_gyrometer(xg,yg,zg, channel = 301)
+    lpp.add_gyrometer(xg,yg,zg)
     print("gyro",xg,yg,zg)
     lpp.send(reset_payload = True)
+    time.sleep(2)
 
     # Barometer / Druckmessung - in Pascal, Umrechnung in Hectopascal muss vorgenommen werden
+    mpp = MPL3115A2(py,mode=PRESSURE)
     druck = mpp.pressure()
-    druck = druck/100 #Für Hectopascal
+    druck = round(druck/100) #Für Hectopascal
     print("druck",druck)
-    lpp.add_barometric_pressure(druck, channel = 501)
+    lpp.add_barometric_pressure(druck)
     print("druck",druck)
     lpp.send(reset_payload = True)
+    time.sleep(2)
 
     # Temperatur des Sensors auslesen in Celsius
     temperatur = si.temperature()
-    lpp.add_temperature(temperatur, channel = 401)
+    lpp.add_temperature(temperatur)
+    temperatur = round(temperatur,2)
     print("temperatur",temperatur)
     lpp.send(reset_payload = True)
+    time.sleep(2)
 
     # Höhenmeter des Sensors anhand des Druckes von Pascal umgerechnet
+    mp = MPL3115A2(py,mode=ALTITUDE)
     mum = mp.altitude()
-    lpp.add_barometric_pressure(mum, channel = 601)
-    print("meteruebermeer",mum)
+    mum = round(mum,2)
+    lpp.add_barometric_pressure(mum, channel = 60)
+    print("meteruebermeer in km",mum)
     lpp.send(reset_payload = True)
+    time.sleep(2)
 
     # Feuchtigkeit messen
     humid = si.humidity()
-    lpp.add_relative_humidity(humid, channel = 402)
+    humid = round(humid,2)
+    lpp.add_relative_humidity(humid)
     print("humid",humid)
     lpp.send(reset_payload = True)
+    time.sleep(2)
 
     time.sleep(30)
