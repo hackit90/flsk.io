@@ -36,6 +36,11 @@ if __name__ == '__main__':
         )
 
     nanogw.start()
+    # LED-STATUS: LoRaWAN ist ready
+    pycom.rgbled(0x333333)
+    time.sleep(5)
+
+    # LED-STATUS: Auf Heartbeat Mode, damit Strom gespart wird
     pycom.heartbeat(True)
     nanogw._log('ENTER to enter the REPL')
 input()

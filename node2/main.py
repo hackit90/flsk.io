@@ -4,6 +4,7 @@
 #TTN:                       Europe | 3400 Burgdorf LW-GATEWAY_ID
 #ProjectDate:               2019-03-20
 #Ordner:                   /lib
+#File:                     main.py
 
 #Bibliotheken importieren von /lib
 import time
@@ -60,10 +61,10 @@ lora.join(activation=LoRa.OTAA, auth=(dev_eui, app_eui, app_key), timeout=0, dr=
 
 # Solange sich die Node noch nicht über OTA aktiviert hat:
 # STATUS-LED:Lora!=verbunden
-while not lora.has_joined(0x7f7f11):
-    pycom.rgbled()
+while not lora.has_joined():
+    pycom.rgbled(0x7f7f11)
     time.sleep(2.5)
-    print('OTA Aktivierung in Prozess...')
+    print("OTA Aktivierung in Prozess...")
 
 # Channel Cleaning von nicht verwendeten Channels auf dem Lora Modul
 for i in range(3, 16):
@@ -110,7 +111,6 @@ while lora.has_joined():
     print("xyz:",xyz)
     lpp.send(reset_payload = True)
     time.sleep(30)
-
 
     # lichtsensor inkl. lichtberechnung (multiplikation) zweier Farblichtsensoren.
     # muss dazu zuerst die einzelnen Zahlen im Array - zu INT-format darstellen
