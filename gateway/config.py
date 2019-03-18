@@ -17,7 +17,7 @@ NTP = "pool.ntp.org"
 NTP_PERIOD_S = 3600
 
 WIFI_SSID = 'HAWAIIAN PARADISE'
-WIFI_PASS = 'rustichill575'
+WIFI_PASS = ''
 
 # for EU868 and Switzerlande
 LORA_FREQUENCY = 868100000
