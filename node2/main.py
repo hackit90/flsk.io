@@ -64,6 +64,7 @@ lora.join(activation=LoRa.OTAA, auth=(dev_eui, app_eui, app_key), timeout=0, dr=
 
 # Solange sich die Node noch nicht über OTA aktiviert hat:
 # STATUS-LED:Lora!=verbunden | Orange
+led_status = 1
 while not lora.has_joined():
     pycom.rgbled(0x333000)
     time.sleep(2.5)
@@ -82,7 +83,10 @@ s.setblocking(False)
 
 # LED-STATUS:LORA-Verbindung steht geht auf Herzschlagmodus (braucht weniger Strom)
 time.sleep(5.0)
-pycom.heartbeat(True)
+if led_status == 1:
+    pycom.heartbeat(True)
+else:
+    print("ein Fehler liegt in der LED-Statusanzeige vor")
 
 ####
 #### Ab diesem Abschnitt werden in einer endlosen Schlaufe Daten übermittelt, solange die LORAWAN Verbindung steht
