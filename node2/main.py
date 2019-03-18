@@ -63,9 +63,9 @@ pycom.rgbled(0x222222)
 lora.join(activation=LoRa.OTAA, auth=(dev_eui, app_eui, app_key), timeout=0, dr=config.LORA_NODE_DR)
 
 # Solange sich die Node noch nicht über OTA aktiviert hat:
-# STATUS-LED:Lora!=verbunden
+# STATUS-LED:Lora!=verbunden | Orange
 while not lora.has_joined():
-    pycom.rgbled(0x7f7f11)
+    pycom.rgbled(0x333000)
     time.sleep(2.5)
     print("OTA Aktivierung in Prozess...")
 
@@ -121,7 +121,7 @@ while lora.has_joined():
     light0 = light[0]
     light1 = light[1]
     lpp.add_luminosity(light0)
-    lpp.add_luminosity(light1, channel = 202)
+    lpp.add_luminosity(light1, channel = 22)
     print("light",light)
     lpp.send(reset_payload = True)
     time.sleep(2)
@@ -157,7 +157,7 @@ while lora.has_joined():
     mp = MPL3115A2(py,mode=ALTITUDE)
     mum = mp.altitude()
     mum = round(mum,2)
-    lpp.add_barometric_pressure(mum, channel = 60)
+    lpp.add_barometric_pressure(mum, channel = 61)
     print("meteruebermeer in km",mum)
     lpp.send(reset_payload = True)
     time.sleep(2)
@@ -169,5 +169,8 @@ while lora.has_joined():
     print("humid",humid)
     lpp.send(reset_payload = True)
     time.sleep(2)
+
+    lpp.add_gps(47.353444, 7.904001, 0.0)
+    lpp.send(reset_payload = True)
 
     time.sleep(30)

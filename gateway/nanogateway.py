@@ -1,4 +1,12 @@
-""" LoPy LoRaWAN Nano Gateway. Can be used for both EU868 and US915. """
+#ProjectName:               Abschlussarbeit, Objektorientiertes Programmieren
+#Autor:                     Kanapathipillai Subakeesan (Subi)
+#Projekt Dokumentation:     https://flsk.io
+#TTN:                       Europe | 3400 Burgdorf LW-GATEWAY_ID
+#ProjectDate:               2019-03-20
+#Ordner:                   /lib
+#File:                     main.py
+
+#Bibliotheken importieren von /lib
 
 import errno
 import machine
