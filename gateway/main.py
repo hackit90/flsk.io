@@ -41,5 +41,5 @@ if __name__ == '__main__':
 
     # LED-STATUS: Auf Heartbeat Mode umstellen, damit Strom gespart wird
     pycom.heartbeat(True)
-    nanogw._log('ENTER to enter the REPL')
+    nanogw._log('ENTER')
 input()
