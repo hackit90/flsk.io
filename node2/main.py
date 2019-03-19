@@ -174,8 +174,9 @@ while lora.has_joined():
     lpp.send(reset_payload = True)
     time.sleep(2)
 
+    # GPS Daten
     lpp.add_gps(47.353444, 7.904001, 0)
-    print("humid",humid)
+    print("gps",statisch)
     lpp.send(reset_payload = True)
     time.sleep(2)
 
