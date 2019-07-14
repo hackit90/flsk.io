@@ -181,4 +181,3 @@ while lora.has_joined():
     time.sleep(2)
 
     time.sleep(30)
-fjaöldwifja
