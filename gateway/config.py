@@ -1,3 +1,12 @@
+"""
+#ProjectName:               Abschlussarbeit, Objektorientiertes Programmieren
+#Autor:                     Kanapathipillai Subakeesan (Subi)
+#Projekt Dokumentation:     https://flsk.io
+#TTN:                       Europe | 3400 Burgdorf LW-GATEWAY_ID
+#Ordner:                   /lib
+#File:                     main.py
+"""
+
 import machine
 import ubinascii
 
