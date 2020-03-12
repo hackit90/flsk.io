@@ -1,8 +1,8 @@
+"""
 #ProjectName:               Abschlussarbeit, Objektorientiertes Programmieren
 #Autor:                     Kanapathipillai Subakeesan (Subi)
 #Projekt Dokumentation:     https://flsk.io
 #TTN:                       Europe | 3400 Burgdorf LW-GATEWAY_ID
-#ProjectDate:               2019-03-20
 #Ordner:                   /lib
 #File:                     main.py
 
